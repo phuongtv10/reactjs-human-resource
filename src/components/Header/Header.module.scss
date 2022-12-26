@@ -1,0 +1,34 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  // justify-content: space-between;
+  gap: 25px;
+  height: 64px;
+  align-items: center;
+  background-color: var(--black-2);
+  color: var(--black-0);
+  padding: 1rem 0 1rem 7rem;
+  .logo {
+    width: 45px;
+    height: 36px;
+  }
+
+  .menu {
+    .item {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+    }
+  }
+  .ant-dropdown {
+    width: 120px !important;
+  }
+}
+
+div {
+  div {
+    .ant-dropdown {
+      width: 120px !important;
+    }
+  }
+}

@@ -12,7 +12,9 @@ root.render(
   <ConfigProvider theme={{
     token,
   }}>
-    <App />
+    <div id='theme'>
+      <App/>
+    </div>
   </ConfigProvider>
 );
 
