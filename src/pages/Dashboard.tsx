@@ -1,6 +1,7 @@
 import { Layout as AntLayout} from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
+import React from 'react'
 import { useState } from 'react'
 import Header from '../components/Header'
 import Layout from '../components/Layout'
