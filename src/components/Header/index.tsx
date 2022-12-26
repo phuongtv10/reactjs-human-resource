@@ -1,6 +1,14 @@
 import { LockOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { AutoComplete, Avatar, Divider, Dropdown, Input ,MenuProps} from 'antd';
+import React from 'react';
 import styles from './Header.module.scss';
+
+const handleLogout = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("user");
+  window.location.href = "/auth";
+};
+
 const items: MenuProps['items'] = [
   {
     key: '1',
@@ -29,12 +37,12 @@ const items: MenuProps['items'] = [
     ),
   },
   {
-    key: '2',
+    key: '4',
     label: (
-      <div>
+      <div onClick={handleLogout}>
       <LogoutOutlined />
       <a>
-        Settings
+        Logout
       </a>
     </div>
     ),
@@ -46,6 +54,7 @@ interface HeaderProps {
   collapsed: boolean
 }
 const Header = ({onCollapsed,collapsed}: HeaderProps) => {
+
   return <div className={styles.header}>
     <div>
       <img className={styles.logo} src='./assets/logo.png' alt='logo'/>

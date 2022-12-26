@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
-import Icon from '@ant-design/icons';
+import {UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import styles from './Login.module.scss'
 import { setUserSession } from '../../Utils/Common';
@@ -63,17 +63,17 @@ const Login = (props) => {
                 <Form.Item
                     label=""
                     name="username"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
+                    rules={[{ required: true, message: 'Hãy nhập tên đăng nhập!' }]}
                 >
-                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+                    <Input prefix={<UserOutlined type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Tên đăng nhập'/>
                 </Form.Item>
 
                 <Form.Item
                     label=""
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    rules={[{ required: true, message: 'Hãy nhập mật khẩu!' }]}
                 >
-                    <Input.Password prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+                    <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Mật khẩu'/>
                 </Form.Item>
 
                 {/* <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
