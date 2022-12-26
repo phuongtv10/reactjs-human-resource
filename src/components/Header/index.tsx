@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './Header.module.scss';
 
 const handleLogout = () => {
-  localStorage.removeItem("accessToken");
+  localStorage.removeItem("token");
   localStorage.removeItem("user");
   window.location.href = "/auth";
 };
