@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import Icon from '@ant-design/icons';
 import axios from 'axios';
-import './index.css';
+import styles from './Login.module.scss'
 import { setUserSession } from '../../Utils/Common';
 import { useNavigate } from 'react-router-dom';
 
@@ -50,13 +50,8 @@ const Login = (props) => {
     };
 
     return (
-        <div className='login-wrappers' style={{
-            display: "flex",
-            marginTop: "5rem",
-            flexDirection: "column",
-            alignItems: "center"
-          }}>
-            <Form
+        <div className={styles.loginWrapper}>
+            <Form className={styles.loginForm}
                 name="basic"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
@@ -86,7 +81,8 @@ const Login = (props) => {
             </Form.Item> */}
 
                 <Form.Item wrapperCol={{ span: 16 }}>
-                    <Button type="primary" htmlType="submit" style={{backgroundColor: "#be202f"}}>
+                    <Button type="primary" htmlType="submit"
+                    className={styles.submitForm}>
                         Đăng nhập
                     </Button>
                 </Form.Item>
