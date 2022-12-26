@@ -3,7 +3,6 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import {UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import styles from './Login.module.scss'
-import { setUserSession } from '../../Utils/Common';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -20,7 +19,8 @@ const Login = (props) => {
         axios.post('http://10.10.100.21:8762/auth', { username: values.username, password: values.password }).then(response => {
             setLoading(false);
             console.log(response);
-            setUserSession(response.data.responseData.token, response.data.responseData.username);
+            sessionStorage.setItem('token', response.data.responseData.token);
+            sessionStorage.setItem('user', JSON.stringify(response.data.responseData.username));
             navigate('/dashboard');
         }).catch(error => {
             setLoading(false);
