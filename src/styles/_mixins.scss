@@ -1,0 +1,26 @@
+
+
+
+@mixin themes{
+  :root {
+    #theme {
+      --black-0: #ffffff;
+      --black-10: #fafafa;
+      --black-20: #f4f6f9;
+      --black-30: #f5f8fd;
+      --black-40: #e4e5e7;
+      --black-50: #c5c7cd;
+      --black-60: #9599a4;
+      --black-70: #676b78;
+      --black-80: #535766;
+      --black-90: #333744;
+      --black-1: #131a2e;
+      --black-2: #1e323e;
+      
+      --primary: #be202f;
+
+      --yellow-1: #752005;
+
+    }
+  }
+}

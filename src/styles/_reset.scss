@@ -1,0 +1,27 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--black-90);
+}
+
+p {
+  color: var(--black-80);
+}
+
+button,
+a {
+  cursor: pointer;
+}
