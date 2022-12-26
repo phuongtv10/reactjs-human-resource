@@ -6,26 +6,14 @@ import styles from './Login.module.scss'
 import { setUserSession } from '../../Utils/Common';
 import { useNavigate } from 'react-router-dom';
 
-const useFormInput = initialValues => {
-    const [value, setValue] = useState(initialValues);
-    const handleChange = e => {
-        setValue(e.target.value);
-    }
-    return {
-        value, onchange: handleChange
-    }
-}
 
 const Login = (props) => {
-    const username = useFormInput('')
-    const password = useFormInput('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     // handle button click of login form
     const handleLogin = (values) => {
-        console.log(25);
         setError(null);
         setLoading(true);
         console.log(values);
@@ -40,10 +28,6 @@ const Login = (props) => {
             else setError("Something went wrong. Please try again later.");
         });
     }
-
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -75,10 +59,6 @@ const Login = (props) => {
                 >
                     <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Mật khẩu'/>
                 </Form.Item>
-
-                {/* <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
-                <Checkbox>Remember me</Checkbox>
-            </Form.Item> */}
 
                 <Form.Item wrapperCol={{ span: 16 }}>
                     <Button type="primary" htmlType="submit"
