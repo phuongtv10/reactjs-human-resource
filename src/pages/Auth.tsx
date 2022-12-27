@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import styles from './Auth.module.scss'
 import { useNavigate } from 'react-router-dom';
+import axios from '../api/index';
 
-
+const LOGIN_URL = '/auth';
 const AuthPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // handle button click of login form
-  const handleLogin = (values: { username: any; password: any; }) => {
-    setError(null);
-    setLoading(true);
-    console.log(values);
-    axios.post('http://10.10.100.21:8762/auth', { username: values.username, password: values.password }).then(response => {
+
+  const HandleLogin = async (values: { username: any; password: any; }) => {
+    await axios.post(LOGIN_URL, { username: values.username, password: values.password }).then(response => {
       setLoading(false);
-      console.log(response);
-      sessionStorage.setItem('token', response.data.responseData.token);
-      sessionStorage.setItem('user', JSON.stringify(response.data.responseData.username));
+      const token = response?.data?.responseData?.token;
+      const user = response?.data?.responseData?.username
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('user', JSON.stringify(user));
       navigate('/dashboard');
     }).catch(error => {
       setLoading(false);
-      if (error.response.status === 401) setError(error.response.data.message);
+      console.log(error);
+      if (error?.code === 'ERR_NETWORK') setError(error.message);
       else setError(null);
     });
   }
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
 
   return (
     <div className={styles.loginWrapper}>
@@ -40,8 +36,7 @@ const AuthPage = () => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
-        onFinish={handleLogin}
-        onFinishFailed={onFinishFailed}
+        onFinish={HandleLogin}
         autoComplete="off"
       >
         <Form.Item
@@ -59,6 +54,8 @@ const AuthPage = () => {
         >
           <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Mật khẩu' />
         </Form.Item>
+
+        <p style={{'paddingBottom': '1rem'}}>{error}</p>
 
         <Form.Item wrapperCol={{ span: 16 }}>
           <Button type="primary" htmlType="submit"

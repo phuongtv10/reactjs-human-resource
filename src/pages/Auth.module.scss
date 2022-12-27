@@ -8,6 +8,10 @@
 
 .loginForm {
   width: 29%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 9.5%;
 }
 .submitForm {
   width: 100%;
