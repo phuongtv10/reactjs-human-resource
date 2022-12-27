@@ -12,7 +12,6 @@ const AuthPage = () => {
   const navigate = useNavigate();
 
   // handle button click of login form
-
   const HandleLogin = async (values: { username: any; password: any; }) => {
     await axios.post(LOGIN_URL, { username: values.username, password: values.password }).then(response => {
       setLoading(false);
