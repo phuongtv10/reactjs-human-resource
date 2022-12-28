@@ -1,0 +1,18 @@
+.main {
+  width: 100%;
+  .header {
+    margin: 10px;
+  }
+  .backHome {
+    color: #00000073;
+  }
+  .backHome :hover {
+    color: rgb(212, 81, 90);
+  }
+  .btnAction {
+    float: right;
+  }
+  .tableMain, .cardTitle {
+    margin: 10px;
+  }
+}
