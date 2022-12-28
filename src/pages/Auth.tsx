@@ -12,14 +12,18 @@ const AuthPage = () => {
   const navigate = useNavigate();
 
   // handle button click of login form
-  const HandleLogin = async (values: { username: any; password: any; }) => {
+  const handleLogin = async (values: { username: any; password: any; }) => {
     await axios.post(LOGIN_URL, { username: values.username, password: values.password }).then(response => {
       setLoading(false);
-      const token = response?.data?.responseData?.token;
-      const user = response?.data?.responseData?.username
-      sessionStorage.setItem('token', token);
-      sessionStorage.setItem('user', JSON.stringify(user));
-      navigate('/dashboard');
+      if (response && response?.data && response?.data.responseMessage == "Thành Công") {
+        const token = response?.data?.responseData?.token;
+        const user = response?.data?.responseData?.username
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('user', JSON.stringify(user));
+        navigate('/dashboard');
+      } else if(response && response?.data && response?.data?.responseData == null) {
+        setError(response?.data?.responseMessage);
+      } else {}
     }).catch(error => {
       setLoading(false);
       console.log(error);
@@ -35,7 +39,7 @@ const AuthPage = () => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
-        onFinish={HandleLogin}
+        onFinish={handleLogin}
         autoComplete="off"
       >
         <Form.Item
@@ -54,7 +58,7 @@ const AuthPage = () => {
           <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Mật khẩu' />
         </Form.Item>
 
-        <p style={{'paddingBottom': '1rem'}}>{error}</p>
+        <p style={{'paddingBottom': '1rem', 'color': 'red'}}>{error}</p>
 
         <Form.Item wrapperCol={{ span: 16 }}>
           <Button type="primary" htmlType="submit"

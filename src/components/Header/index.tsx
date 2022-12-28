@@ -3,7 +3,10 @@ import { AutoComplete, Avatar, Divider, Dropdown, Input ,MenuProps} from 'antd';
 import React from 'react';
 import styles from './Header.module.scss';
 
+
 const handleLogout = () => {
+  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("user");
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   window.location.href = "/auth";
