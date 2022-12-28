@@ -1,3 +1,4 @@
+import React from 'react';
 import { Provider } from 'react-redux';
 import {RouterProvider,createBrowserRouter} from 'react-router-dom'
 import NotFoundPage from './pages/404';
