@@ -1,9 +1,14 @@
-import React from 'react';
-import { Space, Table, Tag, Button, DatePicker, Select, Breadcrumb } from 'antd';
+import React, { useState } from 'react';
+import { Space, Table, Tag, Button, DatePicker, Select, Breadcrumb, Modal, Form, Input, InputNumber } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import styles from './Hoso.module.scss';
 import { Card } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
 
 interface DataType {
   key: string;
@@ -123,7 +128,35 @@ const onSearch = (value: string) => {
 
 const { RangePicker } = DatePicker;
 
+const validateMessages = {
+  required: '${label} bắt buộc',
+  types: {
+    email: '${label} không đúng định dạng',
+    number: '${label} phải là kiểu số',
+  },
+  number: {
+    range: '${label} must be between ${min} and ${max}',
+  },
+};
+
 const Hoso = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const onFinish = (values: any) => {
+    console.log(values);
+  };
+
   return <div className={styles.main}>
     <div className={styles.header}>
       <Breadcrumb className={styles.header}>
@@ -197,9 +230,32 @@ const Hoso = () => {
             <Button type="primary" icon={<SearchOutlined />} danger>
               Tìm kiếm
             </Button>
-            <Button type="primary" icon={<PlusOutlined />} danger>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal} danger>
               Thêm mới
             </Button>
+            <Modal title="Thêm mới ngày công" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText={'Lưu'} cancelText={'Hủy'} width={750}>
+              <div>
+                <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+                  <div className={styles.create1}>
+                    <Form.Item name={['user', 'namePrj']} label="Tên dự án" rules={[{ required: true }]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name={['user', 'email']} label="Người quản lý" rules={[{ type: 'email' }]}>
+                      <Input />
+                    </Form.Item>
+                  </div>
+                  <Form.Item name={['user', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
+                    <InputNumber />
+                  </Form.Item>
+                  <Form.Item name={['user', 'website']} label="Website">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name={['user', 'note']} label="Ghi chú">
+                    <Input.TextArea />
+                  </Form.Item>
+                </Form>
+              </div>
+            </Modal>
           </Space>
         </div>
       </Card>
