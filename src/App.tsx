@@ -6,6 +6,7 @@ import AuthPage from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import HomePage from './pages/Home';
 import store from './redux/store';
+import {CookiesProvider,Cookies} from 'react-cookie'
 
 const router = createBrowserRouter([
   {
@@ -26,10 +27,18 @@ const router = createBrowserRouter([
   }
 ])
 
-function App() {
-  return <Provider store={store}>
+type IAppProps = {
+	cookies?: string;
+};
+function App({cookies}: IAppProps) {
+
+	const isServer = typeof window === 'undefined';
+  
+  return <CookiesProvider cookies={isServer ? new Cookies(cookies) : undefined}>
+  <Provider store={store}>
     <RouterProvider router={router} />
   </Provider>
+  </CookiesProvider>
 }
 
 export default App;
