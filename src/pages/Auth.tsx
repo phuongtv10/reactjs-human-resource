@@ -47,7 +47,7 @@ const AuthPage = () => {
           name="username"
           rules={[{ required: true, message: 'Hãy nhập tên đăng nhập!' }]}
         >
-          <Input prefix={<UserOutlined type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Tên đăng nhập' />
+          <Input prefix={<UserOutlined type="user" style={{ color: 'rgba(0,0,0,.25)'}} />} placeholder='Tên đăng nhập' />
         </Form.Item>
 
         <Form.Item
@@ -55,7 +55,7 @@ const AuthPage = () => {
           name="password"
           rules={[{ required: true, message: 'Hãy nhập mật khẩu!' }]}
         >
-          <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Mật khẩu' />
+          <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)'}} />} placeholder='Mật khẩu' />
         </Form.Item>
 
         <p style={{'paddingBottom': '1rem', 'color': 'red'}}>{error}</p>

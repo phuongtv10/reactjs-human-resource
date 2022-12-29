@@ -11,8 +11,14 @@
   .logo {
     width: 45px;
     height: 36px;
+    margin-left: -1.9rem;
   }
-
+  .userImg {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+  }
   .menu {
     .item {
       display: flex;
@@ -34,4 +40,8 @@ div {
 }
 a {
   padding-left: 1rem;
+}
+input {
+  height: 1rem;
+  margin-top: -0.2rem !important;
 }
