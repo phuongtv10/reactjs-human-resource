@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Space, Table, Tag, Button, DatePicker, Select, Breadcrumb, Modal, Form, Input, InputNumber } from 'antd';
+import { Space, Table, Tag, Button, DatePicker, Select, Breadcrumb, Modal, Form, Input, InputNumber, Col, Row } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import styles from './Hoso.module.scss';
 import { Card } from 'antd';
@@ -122,6 +122,10 @@ const onChange = (value: string) => {
   console.log(`selected ${value}`);
 };
 
+const onChangeDate = (value: string) => {
+  console.log(`selected ${value}`);
+};
+
 const onSearch = (value: string) => {
   console.log('search:', value);
 };
@@ -131,7 +135,6 @@ const { RangePicker } = DatePicker;
 const validateMessages = {
   required: '${label} bắt buộc',
   types: {
-    email: '${label} không đúng định dạng',
     number: '${label} phải là kiểu số',
   },
   number: {
@@ -155,6 +158,9 @@ const Hoso = () => {
   };
   const onFinish = (values: any) => {
     console.log(values);
+  };
+  const onChangeNum = (value: number) => {
+    console.log('changed', value);
   };
 
   return <div className={styles.main}>
@@ -236,23 +242,73 @@ const Hoso = () => {
             <Modal title="Thêm mới ngày công" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText={'Lưu'} cancelText={'Hủy'} width={750}>
               <div>
                 <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-                  <div className={styles.create1}>
-                    <Form.Item name={['user', 'namePrj']} label="Tên dự án" rules={[{ required: true }]}>
-                      <Input />
-                    </Form.Item>
-                    <Form.Item name={['user', 'email']} label="Người quản lý" rules={[{ type: 'email' }]}>
-                      <Input />
-                    </Form.Item>
-                  </div>
-                  <Form.Item name={['user', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
-                    <InputNumber />
-                  </Form.Item>
-                  <Form.Item name={['user', 'website']} label="Website">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={['user', 'note']} label="Ghi chú">
-                    <Input.TextArea />
-                  </Form.Item>
+                  <Row>
+                    <Col span={12}>
+                      <Form.Item name={['user', 'namePrj']} label="Tên dự án" rules={[{ required: true }]}>
+                        <Input placeholder="Tên dự án" style={{ width: 200 }} />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item name={['user', 'manage']} label="Người quản lý">
+                        <Input placeholder="Người quản lý" style={{ width: 200 }} />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Form.Item name={['user', 'date']} label="Ngày">
+                        <DatePicker />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item name={['user', 'cong']} label="Loại cộng">
+                        <Select
+                          style={{ width: 200 }}
+                          showSearch
+                          placeholder="Select a person"
+                          optionFilterProp="children"
+                          onChange={onChange}
+                          onSearch={onSearch}
+                          filterOption={(input, option) =>
+                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                          }
+                          options={[
+                            {
+                              value: 'jack',
+                              label: 'Jack',
+                            },
+                            {
+                              value: 'lucy',
+                              label: 'Lucy',
+                            },
+                            {
+                              value: 'tom',
+                              label: 'Tom',
+                            },
+                          ]}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Form.Item name={['user', 'hour']} label="Số giờ công">
+                        <InputNumber min={1} max={10} defaultValue={1} style={{ width: 200 }} />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item name={['user', 'hour']} label="Công điều chỉnh">
+                        <Input placeholder="Basic usage" style={{ width: 200 }} />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={24}>
+                      <Form.Item name={['user', 'note']} label="Ghi chú">
+                        <Input.TextArea />
+                      </Form.Item>
+                    </Col>
+                  </Row>
                 </Form>
               </div>
             </Modal>
