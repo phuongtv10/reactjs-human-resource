@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="13d4790f-4230-4f35-81ea-fbaa5f9c4af8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Hoso/Hoso.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Hoso/index.tsx" afterDir="false" />
+    <list default="true" id="fb021a98-9b07-450e-a36e-43311597bc3a" name="Changes" comment="update table">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
