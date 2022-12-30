@@ -10,6 +10,7 @@ const HomePage = () => {
     navigate('/auth')
   },[])
 
+
   return <></>
 }
 

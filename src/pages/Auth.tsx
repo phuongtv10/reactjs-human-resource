@@ -19,31 +19,31 @@ const AuthPage = () => {
 
   const navigate = useNavigate()
 
-  const handleLogin = async (values: { username: string, password: string }) => {
 
-    try {
-      setIsLoading(true)
-      const result = await login(values).unwrap()
+  const handleLogin = async (values: {username: string,password: string}) => {
 
-      if (result.responseCode !== STATUS_CODE.SUCCESS) {
-        setTimeout(() => {
-          setIsLoading(false)
-          setError(result.responseMessage)
-        }, 1500)
+   try {
+    setIsLoading(true)
+    const result = await login(values).unwrap()
+    
+    if(result.responseCode !== STATUS_CODE.SUCCESS) {
+      setTimeout(() => {
+        setIsLoading(false)
+        setError(result.responseMessage)
+      },1500)
 
-        return
-      }
-
-      // localStorage.setItem('tookens', result.responseData.token)
-      setCookie(ACCESS_TOKEN, result.responseData.token);
-
-      dispatch(loginAction({
-        data: result.responseData.employeeInfo,
-      }))
-      navigate('/dashboard')
-    } catch (error) {
-      console.log(error)
+      return
     }
+
+    setCookie(ACCESS_TOKEN,result.responseData.token)
+
+    dispatch(loginAction({
+      data: result.responseData.employeeInfo,
+    }))
+    navigate('/dashboard')
+   } catch (error) {
+      console.log(error)
+   }
 
   }
 

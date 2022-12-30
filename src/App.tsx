@@ -33,6 +33,7 @@ type IAppProps = {
 function App({cookies}: IAppProps) {
 
 	const isServer = typeof window === 'undefined';
+  
   return <CookiesProvider cookies={isServer ? new Cookies(cookies) : undefined}>
   <Provider store={store}>
     <RouterProvider router={router} />
