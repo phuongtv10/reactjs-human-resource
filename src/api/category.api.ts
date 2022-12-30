@@ -1,11 +1,7 @@
-import { token } from './../core/theme/index';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { ICategoryRequest } from '../redux/type';
 import { baseURL } from './auth.api';
-import {Cookies} from 'react-cookie'
 
-const cookies = new Cookies();
-const accessToken = cookies.get('token');
 
 export const categoryApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -22,9 +18,7 @@ export const categoryApi = createApi({
           body: project,
         };
       },
-      invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
-      transformResponse: (result: { data: { project: ICategoryRequest } }) =>
-        result.data.project,
+   
     }),
     updatePost: builder.mutation<ICategoryRequest, { id: string; project: FormData }>(
       {
@@ -36,15 +30,7 @@ export const categoryApi = createApi({
             body: project,
           };
         },
-        invalidatesTags: (result, error, { id }) =>
-          result
-            ? [
-                { type: 'Posts', id },
-                { type: 'Posts', id: 'LIST' },
-              ]
-            : [{ type: 'Posts', id: 'LIST' }],
-        transformResponse: (response: { data: { project: ICategoryRequest } }) =>
-          response.data.project,
+      
       }
     ),
     getPost: builder.query<ICategoryRequest, string>({
@@ -54,7 +40,6 @@ export const categoryApi = createApi({
           credentials: 'include',
         };
       },
-      providesTags: (result, error, id) => [{ type: 'Posts', id }],
     }),
     getAllPosts: builder.query<ICategoryRequest[], void>({
       query() {
@@ -76,7 +61,6 @@ export const categoryApi = createApi({
           credentials: 'include',
         };
       },
-      invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
     }),
   }),
 });

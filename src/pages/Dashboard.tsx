@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import Layout from '../components/Layout'
-import WorkManagement from '../components/Work/WorkManagement'
 import styles from './Dashboard.module.scss'
 
 
@@ -27,7 +26,6 @@ const Dashboard = () => {
     <Layout>
       <div className={styles.navbar}></div>
       <div className={styles.content}>
-        <WorkManagement />
       </div>
     </Layout>
   </AntLayout>

@@ -6,7 +6,6 @@ import authReducer from './features/auth.slice';
 import categoryReducer from './features/category.slice';
 
 const API_MIDDLEWARE: any = [authApi.middleware];
-const CATEGORY_MIDDLEWARE: any = [categoryApi.middleware];
 
 const store = configureStore({
   reducer: {
@@ -14,9 +13,9 @@ const store = configureStore({
     auth: authReducer,
     // Connect the PostApi reducer to the store
     [categoryApi.reducerPath]: categoryApi.reducer,
-    categoryState: categoryReducer,
+    category: categoryReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(API_MIDDLEWARE, CATEGORY_MIDDLEWARE)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(API_MIDDLEWARE)
 })
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,6 +1,6 @@
 import { LockOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SearchOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { AutoComplete, Avatar, Divider, Dropdown, Input ,MenuProps} from 'antd';
-import React, { useEffect, useState } from 'react';
+import { AutoComplete, Divider, Dropdown, Input ,MenuProps} from 'antd';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 
@@ -9,14 +9,6 @@ interface HeaderProps {
   collapsed: boolean
 }
 const Header = ({ onCollapsed, collapsed }: HeaderProps) => {
-  const [widthScreen, setWidth] = useState(2450);
-  const updateDimensions = () => {
-    setWidth(window.innerWidth);
-  }
-  useEffect(() => {
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
 
   const navigate = useNavigate()
 
@@ -81,7 +73,7 @@ const Header = ({ onCollapsed, collapsed }: HeaderProps) => {
         dropdownMatchSelectWidth={500}
       // options={options}
       >
-        <Input prefix={<SearchOutlined style={{ 'height': '1rem' }} />} style={{ width: `calc(${widthScreen}px - 100vh)`, 'maxHeight': '2.3rem' }} size="large" placeholder="Search for people, file, photos..." />
+        <Input prefix={<SearchOutlined style={{ 'height': '1rem' }} />} style={{ width: 900, 'maxHeight': '2.3rem' }} size="large" placeholder="Search for people, file, photos..." />
       </AutoComplete>
     </div>
     <div>

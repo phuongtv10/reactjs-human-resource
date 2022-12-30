@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { ICategoryRequest } from '../../redux/type';
 
 interface ICategoryState {
@@ -13,12 +13,7 @@ export const categorySlice = createSlice({
   initialState,
   name: 'category',
   reducers: {
-    categoryState: (state, action: PayloadAction<ICategoryRequest>) => {
-      state.category = action.payload;
-      console.log('category',state.category);
-    },
   },
 });
 
-export const { categoryState } = categorySlice.actions;
 export default categorySlice.reducer;

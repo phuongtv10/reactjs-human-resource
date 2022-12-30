@@ -1,13 +1,18 @@
-import { useSelector } from 'react-redux'
+import { useCookies } from 'react-cookie'
 import { Navigate, Outlet } from 'react-router-dom'
 
 
 
 
 const Guard = () => {
-  const {authenticated} = useSelector((state: any) => state.auth)
+
+
+  const [cookies] = useCookies()
+
+
+  
   return <div>
-  {authenticated ? <Outlet /> : <Navigate to='/auth' />}
+  {cookies.access_token ? <Outlet /> : <Navigate to='/auth' />}
   </div>
 }
 
