@@ -1,59 +1,63 @@
 import { LockOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { AutoComplete, Avatar, Divider, Dropdown, Input ,MenuProps} from 'antd';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 
-const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  window.location.href = "/auth";
-};
 
-const items: MenuProps['items'] = [
-  {
-    key: '1',
-    label: (
-     <div>
-        <UserOutlined />
-        <a>My account</a>
-     </div>
-    ),
-  },
-  {
-    key: '2',
-    label: (
-      <div>
-        <SettingOutlined />
-      <a>
-        Settings
-    </a>
-    </div>
-    ),
-  },
-  {
-    key: '3',
-    label: (
-        <Divider style={{margin:0}} />
-    ),
-  },
-  {
-    key: '4',
-    label: (
-      <div onClick={handleLogout}>
-      <LogoutOutlined />
-      <a>
-        Logout
-      </a>
-    </div>
-    ),
-  },
-];
+
 
 interface HeaderProps {
   onCollapsed: () => void,
   collapsed: boolean
 }
 const Header = ({onCollapsed,collapsed}: HeaderProps) => {
+
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    
+  }
+
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: (
+       <div onClick={() => navigate('/account')}>
+          <UserOutlined />
+          <a>My account</a>
+       </div>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <div onClick={() => navigate('/settings')}>
+          <SettingOutlined />
+        <a>
+          Settings
+      </a>
+      </div>
+      ),
+    },
+    {
+      key: '3',
+      label: (
+          <Divider style={{margin:0}} />
+      ),
+    },
+    {
+      key: '4',
+      label: (
+        <div onClick={handleLogout}>
+        <LogoutOutlined />
+        <a>
+          Logout
+        </a>
+      </div>
+      ),
+    },
+  ];
 
   return <div className={styles.header}>
     <div>
@@ -70,7 +74,6 @@ const Header = ({onCollapsed,collapsed}: HeaderProps) => {
       <div>
       <AutoComplete
     dropdownMatchSelectWidth={500}
-    // options={options}
   >
     <Input.Search style={{width:1024}} size="large" placeholder="input here" />
     </AutoComplete>

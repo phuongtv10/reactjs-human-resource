@@ -3,10 +3,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface AuthState {
   data: null | any,
+  authenticated: boolean
 }
 
 const initialState: AuthState = {
-    data: {},
+  data: null,
+  authenticated: false
 }
 
 const authSlice = createSlice({
@@ -19,6 +21,7 @@ const authSlice = createSlice({
       return {
         ...state,
         data,
+        authenticated: true
       }
     },
     logout: (state): AuthState => {
