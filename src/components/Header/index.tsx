@@ -1,17 +1,22 @@
-import { LockOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SearchOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { AutoComplete, Avatar, Divider, Dropdown, Input ,MenuProps} from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
-
-
-
 
 interface HeaderProps {
   onCollapsed: () => void,
   collapsed: boolean
 }
-const Header = ({onCollapsed,collapsed}: HeaderProps) => {
+const Header = ({ onCollapsed, collapsed }: HeaderProps) => {
+  const [widthScreen, setWidth] = useState(2450);
+  const updateDimensions = () => {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
   const navigate = useNavigate()
 
@@ -61,26 +66,33 @@ const Header = ({onCollapsed,collapsed}: HeaderProps) => {
 
   return <div className={styles.header}>
     <div>
-      <img className={styles.logo} src='./assets/logo.png' alt='logo'/>
+      <img className={styles.logo} src='./assets/logo.png' alt='logo' />
     </div>
-      <div> 
-        {
-          collapsed ? <MenuUnfoldOutlined onClick={() => onCollapsed()}/> : <MenuFoldOutlined onClick={() => onCollapsed()} />
-        }
-      </div>
-      <div>
+    <div style={{ paddingLeft: '4rem' }}>
+      {
+        collapsed ? <MenuUnfoldOutlined onClick={() => onCollapsed()} /> : <MenuFoldOutlined onClick={() => onCollapsed()} />
+      }
+    </div>
+    <div>
       <LockOutlined />
-      </div>
-      <div>
+    </div>
+    <div>
       <AutoComplete
-    dropdownMatchSelectWidth={500}
-  >
-    <Input.Search style={{width:1024}} size="large" placeholder="input here" />
-    </AutoComplete>
+        dropdownMatchSelectWidth={500}
+      // options={options}
+      >
+        <Input prefix={<SearchOutlined style={{ 'height': '1rem' }} />} style={{ width: `calc(${widthScreen}px - 100vh)`, 'maxHeight': '2.3rem' }} size="large" placeholder="Search for people, file, photos..." />
+      </AutoComplete>
+    </div>
+    <div>
+      <SettingOutlined />
+    </div>
+    <Dropdown className={styles.menu} menu={{ items }} placement="bottomRight" trigger={["click"]}>
+      {/* <Avatar /> */}
+      <div>
+        <img className={styles.userImg} src='./assets/avatar.jpeg' alt='logo' />
       </div>
-        <Dropdown className={styles.menu} menu={{ items }} placement="bottomRight" trigger={["click"]}>
-          <Avatar />
-         </Dropdown>
+    </Dropdown>
   </div>
 }
 

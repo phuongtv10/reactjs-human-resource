@@ -7,14 +7,13 @@ import { useLoginMutation } from '../api/auth.api';
 import { ACCESS_TOKEN, STATUS_CODE } from '../core/constants';
 import { useDispatch } from 'react-redux';
 import { loginAction } from '../redux/features/auth.slice';
-import {useCookies} from 'react-cookie'
+import { useCookies } from 'react-cookie';
 const AuthPage = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [_,setCookie] = useCookies()
+  const [_, setCookie] = useCookies()
 
   const dispatch = useDispatch()
-
 
   const [login] = useLoginMutation()
 
@@ -74,7 +73,7 @@ const AuthPage = () => {
           <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Mật khẩu' />
         </Form.Item>
 
-        <p style={{'paddingBottom': '1rem'}}>{error}</p>
+        <p>{error}</p>
 
         <Form.Item wrapperCol={{ span: 16 }}>
           <Button type="primary" htmlType="submit"
