@@ -1,59 +1,8 @@
 import { LockOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SearchOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { calculateNewValue } from '@testing-library/user-event/dist/utils';
-import { AutoComplete, Avatar, Divider, Dropdown, Input, MenuProps } from 'antd';
-import Search from 'antd/es/transfer/search';
+import { AutoComplete, Avatar, Divider, Dropdown, Input ,MenuProps} from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
-
-
-const handleLogout = () => {
-  sessionStorage.removeItem("token");
-  sessionStorage.removeItem("user");
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  window.location.href = "/auth";
-};
-
-const items: MenuProps['items'] = [
-  {
-    key: '1',
-    label: (
-      <div>
-        <UserOutlined />
-        <a>My account</a>
-      </div>
-    ),
-  },
-  {
-    key: '2',
-    label: (
-      <div>
-        <SettingOutlined />
-        <a>
-          Settings
-        </a>
-      </div>
-    ),
-  },
-  {
-    key: '3',
-    label: (
-      <Divider style={{ margin: 0 }} />
-    ),
-  },
-  {
-    key: '4',
-    label: (
-      <div onClick={handleLogout}>
-        <LogoutOutlined />
-        <a>
-          Logout
-        </a>
-      </div>
-    ),
-  },
-];
 
 interface HeaderProps {
   onCollapsed: () => void,
