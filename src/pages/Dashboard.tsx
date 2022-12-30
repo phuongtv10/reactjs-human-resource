@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import Header from '../components/Header'
 import Layout from '../components/Layout'
 import styles from './Dashboard.module.scss'
-import Hoso from '../components/Hoso'
+import Quanlychamcong from '../components/QuanLyChamCong'
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd'
 import {
@@ -68,7 +68,7 @@ const Dashboard = () => {
         <div className={styles.menuNav} />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
-      <Hoso/>
+      <Quanlychamcong/>
       <Layout>
         <div className={styles.navbar}>
         </div>
