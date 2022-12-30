@@ -1,17 +1,17 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import ProtectedRoute from './config/ProtectedRoute';
 import NotFoundPage from './pages/404';
 import AuthPage from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import HomePage from './pages/Home';
 import store from './redux/store';
+import {CookiesProvider,Cookies} from 'react-cookie'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <ProtectedRoute><HomePage /></ProtectedRoute>
+    element: <HomePage />
   },
   {
     path: '/*',
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <ProtectedRoute><Dashboard /></ProtectedRoute>
+    element: <Dashboard />
   },
   {
     path: '/auth',
@@ -27,12 +27,17 @@ const router = createBrowserRouter([
   }
 ])
 
+type IAppProps = {
+	cookies?: string;
+};
+function App({cookies}: IAppProps) {
 
-
-function App() {
-  return <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+	const isServer = typeof window === 'undefined';
+  return <CookiesProvider cookies={isServer ? new Cookies(cookies) : undefined}>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+  </CookiesProvider>
 }
 
 export default App;

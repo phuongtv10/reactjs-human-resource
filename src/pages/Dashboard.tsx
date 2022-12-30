@@ -1,10 +1,11 @@
 import { Layout as AntLayout} from 'antd'
-import { Content } from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
 import React from 'react'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import Layout from '../components/Layout'
+import WorkManagement from '../components/Work/WorkManagement'
 import styles from './Dashboard.module.scss'
 
 
@@ -12,7 +13,9 @@ const Dashboard = () => {
 
   const [collapsed,setCollapsed] = useState(false)
 
+  const {data} = useSelector((state: any) => state.auth)
 
+  console.log("authData",data)
   const handleCollapse = () => {
     setCollapsed(!collapsed)
   }   
@@ -23,7 +26,9 @@ const Dashboard = () => {
     </Sider>
     <Layout>
       <div className={styles.navbar}></div>
-      <div className={styles.content}></div>
+      <div className={styles.content}>
+        <WorkManagement />
+      </div>
     </Layout>
   </AntLayout>
   </Layout>

@@ -1,35 +1,50 @@
-import React, { useState, useContext } from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { useState } from 'react';
+import { Button, Form, Input } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import styles from './Auth.module.scss'
 import { useNavigate } from 'react-router-dom';
-import axios from '../api/index';
-
-const LOGIN_URL = '/auth';
+import { useLoginMutation } from '../api/auth.api';
+import { ACCESS_TOKEN, STATUS_CODE } from '../core/constants';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../redux/features/auth.slice';
+import { useCookies } from 'react-cookie';
 const AuthPage = () => {
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [_, setCookie] = useCookies()
 
-  // handle button click of login form
-  const handleLogin = async (values: { username: any; password: any; }) => {
-    await axios.post(LOGIN_URL, { username: values.username, password: values.password }).then(response => {
-      setLoading(false);
-      if (response && response?.data && response?.data.responseMessage == "Thành Công") {
-        const token = response?.data?.responseData?.token;
-        const user = response?.data?.responseData?.username
-        sessionStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(user));
-        navigate('/dashboard');
-      } else if(response && response?.data && response?.data?.responseData == null) {
-        setError(response?.data?.responseMessage);
-      } else {}
-    }).catch(error => {
-      setLoading(false);
-      console.log(error);
-      if (error?.code === 'ERR_NETWORK') setError(error.message);
-      else setError(null);
-    });
+  const dispatch = useDispatch()
+
+  const [login] = useLoginMutation()
+
+  const navigate = useNavigate()
+
+  const handleLogin = async (values: { username: string, password: string }) => {
+
+    try {
+      setIsLoading(true)
+      const result = await login(values).unwrap()
+
+      if (result.responseCode !== STATUS_CODE.SUCCESS) {
+        setTimeout(() => {
+          setIsLoading(false)
+          setError(result.responseMessage)
+        }, 1500)
+
+        return
+      }
+
+      // localStorage.setItem('tookens', result.responseData.token)
+      setCookie(ACCESS_TOKEN, result.responseData.token);
+
+      dispatch(loginAction({
+        data: result.responseData.employeeInfo,
+      }))
+      navigate('/dashboard')
+    } catch (error) {
+      console.log(error)
+    }
+
   }
 
   return (
@@ -47,7 +62,7 @@ const AuthPage = () => {
           name="username"
           rules={[{ required: true, message: 'Hãy nhập tên đăng nhập!' }]}
         >
-          <Input prefix={<UserOutlined type="user" style={{ color: 'rgba(0,0,0,.25)'}} />} placeholder='Tên đăng nhập' />
+          <Input prefix={<UserOutlined type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Tên đăng nhập' />
         </Form.Item>
 
         <Form.Item
@@ -55,13 +70,14 @@ const AuthPage = () => {
           name="password"
           rules={[{ required: true, message: 'Hãy nhập mật khẩu!' }]}
         >
-          <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)'}} />} placeholder='Mật khẩu' />
+          <Input.Password prefix={<LockOutlined type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='Mật khẩu' />
         </Form.Item>
 
-        <p style={{'paddingBottom': '1rem', 'color': 'red'}}>{error}</p>
+        <p>{error}</p>
 
         <Form.Item wrapperCol={{ span: 16 }}>
           <Button type="primary" htmlType="submit"
+            loading={isLoading}
             className={styles.submitForm}>
             Đăng nhập
           </Button>

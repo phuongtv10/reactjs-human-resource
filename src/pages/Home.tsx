@@ -1,15 +1,16 @@
-import { Button } from 'antd'
-import React from 'react'
-
-
-
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
+import { useGetAllPostsQuery } from '../api/category.api';
 
 const HomePage = () => {
-  return <div>
-    <Button type='primary'>click</Button>
-    <p>wqdqw</p>
-    <h1>h1</h1>
-  </div>
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    navigate('/auth')
+  },[])
+
+  return <></>
 }
 
 export default HomePage
