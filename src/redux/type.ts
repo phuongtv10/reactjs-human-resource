@@ -1,12 +1,8 @@
-export interface ICategoryRequest {
-  // id: string;
-  // title: string;
-  // content: string;
-  // image: string;
-  // user: string;
+export interface IEvaluationRequest {
+  responseData: []
 }
 
-export interface ICategoryResponse {
+export interface IEvaluationResponse {
   // id: string;
   // title: string;
   // content: string;

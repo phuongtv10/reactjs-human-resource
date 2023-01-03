@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { authApi } from '../api/auth.api';
-import { categoryApi } from '../api/category.api';
+import { evaluationApi } from '../api/evaluation.api';
 import authReducer from './features/auth.slice';
-import categoryReducer from './features/category.slice';
+import evaluationReducer from './features/evaluation.slice';
 
 const API_MIDDLEWARE: any = [authApi.middleware];
 
@@ -12,8 +12,8 @@ const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     auth: authReducer,
     // Connect the PostApi reducer to the store
-    [categoryApi.reducerPath]: categoryApi.reducer,
-    category: categoryReducer,
+    [evaluationApi.reducerPath]: evaluationApi.reducer,
+    evaluation: evaluationReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(API_MIDDLEWARE)
 })

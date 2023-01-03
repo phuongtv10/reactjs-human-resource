@@ -1,18 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ICategoryRequest } from '../redux/type';
+import { IEvaluationRequest } from '../redux/type';
 import { baseURL } from './auth.api';
 
 
-export const categoryApi = createApi({
+export const evaluationApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: baseURL
   }),
-  tagTypes: ['Posts'],
+  tagTypes: ['Evaluation'],
   endpoints: (builder) => ({
-    createPost: builder.mutation<ICategoryRequest, FormData>({
+    createPost: builder.mutation<IEvaluationRequest, FormData>({
       query(project) {
         return {
-          url: '/posts',
+          url: '/evaluation',
           method: 'POST',
           credentials: 'include',
           body: project,
@@ -20,11 +20,11 @@ export const categoryApi = createApi({
       },
    
     }),
-    updatePost: builder.mutation<ICategoryRequest, { id: string; project: FormData }>(
+    updatePost: builder.mutation<IEvaluationRequest, { id: string; project: FormData }>(
       {
         query({ id, project }) {
           return {
-            url: `/posts/${id}`,
+            url: `/evaluation/${id}`,
             method: 'PATCH',
             credentials: 'include',
             body: project,
@@ -33,19 +33,19 @@ export const categoryApi = createApi({
       
       }
     ),
-    getPost: builder.query<ICategoryRequest, string>({
+    getPost: builder.query<IEvaluationRequest, string>({
       query(id) {
         return {
-          url: `/posts/${id}`,
+          url: `/evaluation/${id}`,
           credentials: 'include',
         };
       },
     }),
-    getAllPosts: builder.query<ICategoryRequest[], void>({
+    getAllEvaluationForms: builder.query<IEvaluationRequest, void>({
       query() {
-        const tokens = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdW9uZ2R2IiwiaWF0IjoxNjcyMzcxMTkwfQ.fL6F8mScameCPojJT8etl_vjixXAMOr9EE8ezO6EkdpBkkuiLkmMoxxtRSl0FF5_VMVlHlY3JnFaWAmOaGKM0Q'
+        const tokens = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdW9uZ2R2IiwiaWF0IjoxNjcyNzMyMDc1fQ.9ci9TRgSf8LYX4_7XeeIcR_-oLmhAP8P89Pqr4mPnq2cp9vSPVa7zhI0-qpSROZYoSyZL21Qt3JKFAboSzKybg'
         return {
-          url: `api/work-log/project`,
+          url: `api/user/api/evaluation-form/get-all`,
           method: 'GET',
           headers: {
             Authorization: `Bearer ${tokens}`,
@@ -53,10 +53,10 @@ export const categoryApi = createApi({
           },
         };
       }}),
-    deletePost: builder.mutation<ICategoryRequest, string>({
+    deletePost: builder.mutation<IEvaluationRequest, string>({
       query(id) {
         return {
-          url: `/posts/${id}`,
+          url: `/evaluation/${id}`,
           method: 'Delete',
           credentials: 'include',
         };
@@ -69,6 +69,6 @@ export const {
   useCreatePostMutation,
   useDeletePostMutation,
   useUpdatePostMutation,
-  useGetAllPostsQuery,
-} = categoryApi;
+  useGetAllEvaluationFormsQuery,
+} = evaluationApi;
 

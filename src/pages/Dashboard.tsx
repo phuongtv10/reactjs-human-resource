@@ -14,6 +14,7 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import WorkResultEvaluation from '../components/WorkResultEvaluation/WorkResultEvaluation'
 
 const Dashboard = () => {
 
@@ -38,7 +39,7 @@ const Dashboard = () => {
   const items: MenuItem[] = [
     getItem('Danh mục', ''),
     getItem('Hồ sơ nhân viên', '1', <TeamOutlined />, [getItem('Hồ sơ', '2')]),
-    getItem('Quản lý nhân hợp đồng', '3', <DesktopOutlined />, [getItem('Danh sách hợp đồng', '4')]),
+    getItem('Quản lý hợp đồng', '3', <DesktopOutlined />, [getItem('Danh sách hợp đồng', '4')]),
     getItem('Quản lý công', 'sub1', <UserOutlined />, [
       getItem('Quản lý chấm công', '5'),
       getItem('Quản lý - Quản lý chấm công', '6'),
@@ -68,7 +69,8 @@ const Dashboard = () => {
         <div className={styles.menuNav} />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
-      <Quanlychamcong/>
+      {/* <Quanlychamcong/> */}
+      <WorkResultEvaluation />
       <Layout>
         <div className={styles.navbar}>
         </div>
