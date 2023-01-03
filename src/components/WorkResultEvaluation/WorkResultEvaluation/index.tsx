@@ -5,6 +5,7 @@ import styles from './Style.module.scss';
 import { Card } from 'antd';
 import { SearchOutlined, PlusOutlined, FormOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useGetAllEvaluationFormsQuery } from '../../../api/evaluation.api';
+import ResultForm from './ResultForm';
 const Search = Input.Search;
 
 const layout = {
@@ -112,88 +113,9 @@ const WorkResultEvaluation = () => {
           onSearch={value => console.log(value)}
           className={styles.search}
         />
-        <div className={styles.btnAction}>
-          <Space wrap>
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal} danger>
-              Thêm mới
-            </Button>
-            <Modal title="Thêm mới ngày công" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText={'Lưu'} cancelText={'Hủy'} width={750}>
-              <div>
-                <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-                  <Row>
-                    <Col span={12}>
-                      <Form.Item name={['user', 'namePrj']} label="Tên dự án" rules={[{ required: true }]}>
-                        <Input placeholder="Tên dự án" style={{ width: 200 }} />
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item name={['user', 'manage']} label="Người quản lý">
-                        <Input placeholder="Người quản lý" style={{ width: 200 }} />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={12}>
-                      <Form.Item name={['user', 'date']} label="Ngày">
-                        <DatePicker />
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item name={['user', 'cong']} label="Loại cộng">
-                        <Select
-                          style={{ width: 200 }}
-                          showSearch
-                          placeholder="Select a person"
-                          optionFilterProp="children"
-                          onChange={onChange}
-                          onSearch={onSearch}
-                          filterOption={(input, option) =>
-                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                          }
-                          options={[
-                            {
-                              value: 'jack',
-                              label: 'Jack',
-                            },
-                            {
-                              value: 'lucy',
-                              label: 'Lucy',
-                            },
-                            {
-                              value: 'tom',
-                              label: 'Tom',
-                            },
-                          ]}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={12}>
-                      <Form.Item name={['user', 'hour']} label="Số giờ công">
-                        <InputNumber min={1} max={10} defaultValue={1} style={{ width: 200 }} />
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item name={['user', 'hour']} label="Công điều chỉnh">
-                        <Input placeholder="Basic usage" style={{ width: 200 }} />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={24}>
-                      <Form.Item name={['user', 'note']} label="Ghi chú">
-                        <Input.TextArea />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Modal>
-          </Space>
-        </div>
+        <ResultForm />
       </Card>
-      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={evaluationData} className={styles.tableMain} style={{ textAlign: 'right' }} />}
+      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={evaluationData} className={styles.tableMain} />}
     </div>
   </div>
 }
