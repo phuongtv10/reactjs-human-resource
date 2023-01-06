@@ -38,7 +38,7 @@ const AuthPage = () => {
     setCookie(ACCESS_TOKEN,result.responseData.token)
 
     dispatch(loginAction({
-      data: result.responseData.employeeInfo,
+      data: result.responseData,
     }))
     navigate('/dashboard')
    } catch (error) {

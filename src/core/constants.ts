@@ -1,8 +1,11 @@
-
-
 export const EXCLUDED_PATHS = ['/','/auth']
 
-
+export const WORKRESULTEVALUATION = {
+  TITLE: 'Đánh giá kết quả công việc',
+  TITLE_TEMPLATE: 'mẫu đánh giá kết quả công việc',
+  TITLE_ADD: 'Thêm',
+  TITLE_UPDATE: 'Cập nhật'
+}
 
 
 

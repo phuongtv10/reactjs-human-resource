@@ -1,14 +1,18 @@
+import { token } from './../../core/theme/index';
 import { createSlice } from '@reduxjs/toolkit';
+import { Cookies } from 'react-cookie';
 
 
 interface AuthState {
+  token: any;
   data: null | any,
   authenticated: boolean
 }
 
 const initialState: AuthState = {
   data: null,
-  authenticated: false
+  authenticated: false,
+  token: undefined
 }
 
 const authSlice = createSlice({
@@ -16,12 +20,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state,action): AuthState => {
-      const {data} = action.payload
+      const {data} = action.payload;
 
       return {
         ...state,
         data,
-        authenticated: true
+        authenticated: true,
+        token: data.token
       }
     },
     logout: (state): AuthState => {

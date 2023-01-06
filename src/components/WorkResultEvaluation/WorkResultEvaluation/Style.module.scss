@@ -16,9 +16,15 @@
   .btnAction {
     float: right;
   }
-  .tableMain,
-  .cardTitle {
+  .tableMain{
     margin: 10px;
+  }
+  .cardTitle {
+    width: 99%;
+    margin: 10px;
+  }
+  .searchBtn {
+    float: right;
   }
   input {
     height: 2rem;
