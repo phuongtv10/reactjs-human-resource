@@ -1,0 +1,52 @@
+.containerForm {
+  p {
+    font-weight: normal;
+    margin-left: 9%;
+  }
+  input {
+    height: 2rem;
+  }
+  thead[class*="ant-table-thead"] th {
+    text-align: center !important;
+  }
+  tbody > tr > td {
+    font-weight: normal;
+    text-align: center !important;
+  }
+  .leftContainer {
+    width: 78%;
+  }
+  .listTable {
+    width: 100%;
+  }
+  .rightContainer {
+    width: 22%;
+    .rightForm {
+      display: flex;
+      flex-direction: column;
+      margin-top: -4.7rem;
+      .customHr {
+        width: 195%;
+        margin-left: 32%;
+      }
+      .customForm {
+        margin-left: 27%;
+      }
+      .customRow {
+        padding-top: 2rem;
+      }
+      .customInput {
+        margin-left: 27%;
+      }
+      .customNameInput {
+        margin-left: 20%;
+      }
+      .customFilter {
+        padding-top: 4rem;
+      }
+      .customFilterTitle {
+        margin-left: 0.25rem;
+      }
+    }
+  }
+}

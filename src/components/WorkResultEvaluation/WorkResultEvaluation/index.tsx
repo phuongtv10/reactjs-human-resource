@@ -6,6 +6,7 @@ import { Card } from 'antd';
 import { SearchOutlined, PlusOutlined, FormOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useCreatePostMutation, useDeletePostMutation, useGetAllEvaluationFormsQuery } from '../../../api/evaluation.api';
 import ResultForm from './ResultForm';
+import ReviewForm from './ReviewForm';
 const Search = Input.Search;
 
 const layout = {
@@ -15,6 +16,7 @@ const layout = {
 
 const { confirm } = Modal;
 interface DataType {
+  key: React.Key;
 }
 
 const onNotify = () => {
@@ -34,9 +36,6 @@ const onNotify = () => {
     onCancel() { },
   });
 }
-
-const onSearch = (value: string) => {
-};
 
 const validateMessages = {
   required: '${label} bắt buộc',
@@ -76,7 +75,9 @@ const WorkResultEvaluation = () => {
       width: '35%',
       render: (_, record) => (
         <Space size="middle">
-          <Button className={`${styles.addCircle} ${styles.antBtnCircle}`}>
+          <Button className={`${styles.addCircle} ${styles.antBtnCircle}`} onClick={() => {
+            onAdd(record);
+          }}>
             <FormOutlined className={styles.addIcon} />
           </Button>
           <Button className={`${styles.updateCircle} ${styles.antBtnCircle}`} onClick={() => {
@@ -94,9 +95,12 @@ const WorkResultEvaluation = () => {
     },
   ];
   const { data } = useGetAllEvaluationFormsQuery();
-  const evaluationData = data?.responseData
+  const evaluationData = data?.responseData;
   const [item, setItem] = useState('');
   const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const [filterTable, setFilterTable] = useState([]);
 
   // send sample evaluation data via API
   const [form] = Form.useForm();
@@ -127,11 +131,16 @@ const WorkResultEvaluation = () => {
     setVisible(true);
   }
 
+  const onAdd = (record: any) => {
+    setItem(record);
+    setIsVisible(true);
+  }
+
   const onDelete = (record: any) => {
     confirm({
       title: 'Thông báo',
       content: 'Bạn có chắc chắn muốn xóa bản ghi này?',
-      cancelText:'Hủy',
+      cancelText: 'Hủy',
       async onOk() {
         try {
           return new Promise((resolve, reject) => {
@@ -146,7 +155,7 @@ const WorkResultEvaluation = () => {
     });
   }
 
-  const handleCreate = (props: any) => {
+  const handleCreateResultForm = (props: any) => {
     if (props) {
       props.validateFields().then(async (values: any, error: any) => {
         if (values) {
@@ -173,6 +182,40 @@ const WorkResultEvaluation = () => {
     }
   };
 
+  const handleCreateReviewForm = (props: any) => {
+    if (props) {
+      props.validateFields().then(async (values: any, error: any) => {
+        if (values) {
+          console.log("Received values of form: ", values);
+          const newData = {
+            "evaluationFormDetailDTOList": [
+              {
+                "id": "",
+                "criteriaSuper": values.evaluatedCriteria.criteriaSuper,
+                "percent": Number(values.evaluatedCriteria.percent)
+              }
+            ],
+            "evaluationFormDTO": {
+              "id": null,
+              "name": values.evaluatedSample.name,
+              "type": values.evaluatedSample.type
+            }
+          }
+          createPost(newData);
+        }
+        props.resetFields();
+        await setVisible(false);
+      });
+    }
+  };
+
+  const onSearch = (value: string) => {
+    const filterData = (evaluationData && evaluationData.filter((o) => Object.keys(o).some((k) => String(o[k])
+      .toLowerCase()
+      .includes(value.toLowerCase())))) as [];
+      setFilterTable(filterData);
+  };
+
   return <div className={styles.main}>
     <div className={styles.header}>
       <Breadcrumb className={styles.header}>
@@ -189,24 +232,27 @@ const WorkResultEvaluation = () => {
     </div>
     <div>
       <Card className={styles.cardTitle}>
-        <Search
+        <Search enterButton
           placeholder="Tìm kiếm mẫu đánh giá"
-          onSearch={value => console.log(value)}
+          onSearch={onSearch}
           className={styles.search}
         />
         <Button className={styles.searchBtn} type="primary" icon={<PlusOutlined />} onClick={() => setVisible(true)} danger>
           Thêm mới
         </Button>
       </Card>
-      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={evaluationData} className={styles.tableMain} />}
+      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={filterTable && filterTable.length > 0 ? filterTable: evaluationData } className={styles.tableMain} />}
       <ResultForm
         visible={visible}
         item={item}
         onCancel={() => setVisible(false)}
-        onCreate={handleCreate} />
+        onCreate={handleCreateResultForm} />
+      <ReviewForm isVisible={isVisible} item={item}
+        onCancel={() => setIsVisible(false)} onCreate={handleCreateReviewForm}/>
     </div>
   </div>
 }
 
 export default WorkResultEvaluation
+
 

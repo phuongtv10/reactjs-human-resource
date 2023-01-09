@@ -23,7 +23,7 @@ export const evaluationApi = createApi({
     return headers
   },
 }),
-  tagTypes: ["Evaluation", "Criteria"],
+  tagTypes: ["Evaluation", "Criteria", 'Assignation'],
   endpoints: (builder) => ({
     createPost: builder.mutation<IEvaluationRequest, {}>({
       query(project) {
@@ -84,6 +84,87 @@ export const evaluationApi = createApi({
       //   return result && result?.responseData ? result?.responseData?.map(({ id }: any) => ({ type: 'Criteria', id })) : ['Criteria']
       // }
     }),
+    getAssignedData: builder.query<IEvaluationRequest, any>({
+      query() {
+        return {
+          url: `api/user/api/evaluation-form/get-data-assign`,
+          method: "GET",
+        };
+      },
+      providesTags:  ['Assignation']
+    }),
+    getListDeptActive: builder.query<IEvaluationRequest, any>({
+      query(type) {
+        return {
+          url: `api/user/list-dept-active`,
+          method: "GET",
+        };
+      },
+      // providesTags: (result) => {
+      //   console.log('chuan', result);
+      //   return result && result?.responseData ? result?.responseData?.map(({ id }: any) => ({ type: 'Criteria', id })) : ['Criteria']
+      // }
+    }),
+    getContract: builder.query<IEvaluationRequest, any>({
+      query(type) {
+        return {
+          url: `api/param/api/findByType/contract`,
+          method: "GET",
+        };
+      },
+      // providesTags: (result) => {
+      //   console.log('chuan', result);
+      //   return result && result?.responseData ? result?.responseData?.map(({ id }: any) => ({ type: 'Criteria', id })) : ['Criteria']
+      // }
+    }),
+    getProject: builder.query<IEvaluationRequest, any>({
+      query(type) {
+        return {
+          url: `api/work-log/project`,
+          method: "GET",
+        };
+      },
+      // providesTags: (result) => {
+      //   console.log('chuan', result);
+      //   return result && result?.responseData ? result?.responseData?.map(({ id }: any) => ({ type: 'Criteria', id })) : ['Criteria']
+      // }
+    }),
+    getEvaluateType: builder.query<IEvaluationRequest, any>({
+      query(type) {
+        return {
+          url: `api/param/api/findByType/EVALUATE_TYPE`,
+          method: "GET",
+        };
+      },
+      // providesTags: (result) => {
+      //   console.log('chuan', result);
+      //   return result && result?.responseData ? result?.responseData?.map(({ id }: any) => ({ type: 'Criteria', id })) : ['Criteria']
+      // }
+    }),
+    getEvaluateForm: builder.query<IEvaluationRequest, any>({
+      query(type) {
+        return {
+          url: `api/param/api/findByType/EVALUATION_FORM`,
+          method: "GET",
+        };
+      },
+      // providesTags: (result) => {
+      //   console.log('chuan', result);
+      //   return result && result?.responseData ? result?.responseData?.map(({ id }: any) => ({ type: 'Criteria', id })) : ['Criteria']
+      // }
+    }),
+    getListEmployeeCodeByEvaluationForm: builder.query<IEvaluationRequest, any>({
+      query(id) {
+        return {
+          url: `api/user/api/markCheckpoint/getListEmployeeCodeByEvaluationForm?id=${id}`,
+          method: "GET",
+        };
+      },
+      // providesTags: (result) => {
+      //   console.log('chuan', result);
+      //   return result && result?.responseData ? result?.responseData?.map(({ id }: any) => ({ type: 'Criteria', id })) : ['Criteria']
+      // }
+    }),
     deletePost: builder.mutation<IEvaluationRequest, string>({
       query(id) {
         return {
@@ -102,4 +183,11 @@ export const {
   useGetEvaluationFormByIdQuery,
   useGetCriterionByTypeQuery,
   useGetAllEvaluationFormsQuery,
+  useGetEvaluateFormQuery,
+  useGetAssignedDataQuery,
+  useGetContractQuery,
+  useGetListDeptActiveQuery,
+  useGetProjectQuery,
+  useGetEvaluateTypeQuery,
+  useGetListEmployeeCodeByEvaluationFormQuery
 } = evaluationApi;
