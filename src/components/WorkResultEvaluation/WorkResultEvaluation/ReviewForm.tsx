@@ -88,13 +88,12 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
     const [form] = Form.useForm();
     const [isCriterionData, setIsCriterionData] = useState(false);
     const [assignedData, setAssignedData] = useState([]);
-    const [listDeptActiveData, setListDeptActiveData] = useState([] as any);
-    const [contractData, setContractData] = useState([] as any);
-    const [projectData, setProjectData] = useState([] as any);
     const [evaluateFormData, setEvaluateFormData] = useState({});
     const [evaluateTypeData, setEvaluateTypeData] = useState({});
     const [employeeData, setEmployeeData] = useState({});
     const [evaluationType, setEvaluationType] = useState('');
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
 
     const { data: dataByType } = useGetCriterionByTypeQuery(evaluationType, {});
     const { data: dataById } = useGetEvaluationFormByIdQuery(item?.id);
@@ -107,58 +106,50 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
     const { data: employee } = useGetListEmployeeCodeByEvaluationFormQuery('');
 
     let changing = item?.id;
+    const listDeptActivedDataOption = () => {
+        if (listDeptActivedData && listDeptActivedData?.responseData) {
+            const optionsData: SelectProps['options'] = [];
+            for (let i = 0; i < listDeptActivedData?.responseData.length; i++) {
+                if (listDeptActivedData?.responseData[i]) {
+                    optionsData.push({
+                        label: listDeptActivedData?.responseData[i]['deptName'],
+                        value: listDeptActivedData?.responseData[i]['deptId'],
+                    });
+                }
+            }
+            return optionsData
+        }
+    }
+    const contractOption = () => {
+        if (contract && contract?.responseData) {
+            const optionsData: SelectProps['options'] = [];
+            for (let i = 0; i < contract?.responseData.length; i++) {
+                if (contract?.responseData[i]) {
+                    optionsData.push({
+                        label: contract?.responseData[i]['paramName'],
+                        value: contract?.responseData[i]['paramId'],
+                    });
+                }
+            }
+            return optionsData
+        }
+    }
+    const projectOption = () => {
+        if (project && Array.isArray(project)) {
+            let optionsData: SelectProps['options'] = [];
+            optionsData = project.map((item: any) => ({
+                'label': item['projCode'],
+                'value': item['id'],
+            }))
+            return optionsData
+        }
+    }
     useEffect(() => {
         if (dataAssigned && dataAssigned?.responseData) setAssignedData(dataAssigned?.responseData);
-        const listDeptActivedDataOption = () => {
-            if (listDeptActivedData && listDeptActivedData?.responseData) {
-                const optionsData: SelectProps['options'] = [];
-                for (let i = 0; i < listDeptActivedData?.responseData.length; i++) {
-                    if (listDeptActivedData?.responseData[i]) {
-                        optionsData.push({
-                            label: listDeptActivedData?.responseData[i]['deptName'],
-                            value: listDeptActivedData?.responseData[i]['deptId'],
-                        });
-                    }
-                }
-                return optionsData
-            }
-        }
-        if (listDeptActivedDataOption) setListDeptActiveData(listDeptActivedDataOption());
-
-        const contractOption = () => {
-            if (contract && contract?.responseData) {
-                const optionsData: SelectProps['options'] = [];
-                for (let i = 0; i < contract?.responseData.length; i++) {
-                    if (contract?.responseData[i]) {
-                        optionsData.push({
-                            label: contract?.responseData[i]['paramName'],
-                            value: contract?.responseData[i]['paramId'],
-                        });
-                    }
-                }
-                return optionsData
-            }
-        }
-        if (contractOption) setContractData(contractOption());
-
-        const projectOption = () => {
-            if (project && Array.isArray(project)) {
-                let optionsData: SelectProps['options'] = [];
-                optionsData = project.map((item: any) => ({
-                    'label': item['projCode'],
-                    'value': item['id'],
-                }))
-                return optionsData
-            }
-        }
-        if (projectOption) setProjectData(projectOption());
-
         if (evaluateForm && evaluateForm?.responseData) setEvaluateFormData(evaluateForm?.responseData);
         if (evaluateType && evaluateType?.responseData) setEvaluateTypeData(evaluateType?.responseData);
         if (employee && employee?.responseData) setEmployeeData(employee?.responseData);
-
-
-    }, [item]);
+    }, []);
 
     useEffect(() => {
         if (item && Object.entries(item).length > 0) {
@@ -190,27 +181,17 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
         setEvaluationType(value);
     };
 
-    let onCreated = useCallback(() => onCreate(form), []);
     const onCanceled = useCallback(() => {
         setIsCriterionData(false);
         return onCancel()
     }, []);
 
-    const validateMessages = {
-        required: '${label} bắt buộc',
-        types: {
-            number: '${label} phải là kiểu số',
-        },
-        number: {
-            range: '${label} must be between ${min} and ${max}',
-        },
-    };
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
+    // const employeeAssigned: []
     const onSelectChange = (newSelectedRowKeys: any) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
+    let onCreated = useCallback(() => onCreate(selectedRowKeys), []);
 
     const rowSelection = {
         selectedRowKeys,
@@ -230,7 +211,7 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
                                         <Table rowSelection={rowSelection} columns={columns} dataSource={assignedData} className={styles.listTable} rowKey={(record) => record.employeeCode} />
                                     </th>
                                     <th className={styles.rightContainer}>
-                                        <Form {...layout} name="nest-messages" validateMessages={validateMessages} form={form}>
+                                        <Form {...layout} name="nest-messages" form={form}>
                                             <div className={styles.rightForm}>
                                                 <Row className={styles.customFilter}>
                                                     <Col span={12}>
@@ -280,7 +261,7 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
                                                                 optionFilterProp="children"
                                                                 filterOption={(input, option: any) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                                                 }
-                                                                options={listDeptActiveData}
+                                                                options={listDeptActivedDataOption()}
                                                             />
                                                         </Form.Item>
                                                     </Col>
@@ -296,7 +277,7 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
                                                                 optionFilterProp="children"
                                                                 filterOption={(input, option) => (option?.label ?? '').toString().toLowerCase().includes(input.toLowerCase())
                                                                 }
-                                                                options={contractData}
+                                                                options={contractOption()}
                                                             />
                                                         </Form.Item>
                                                     </Col>
@@ -313,7 +294,7 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
                                                                 filterOption={(input, option) =>
                                                                     (option?.label ?? '').toString().toLowerCase().includes(input.toLowerCase())
                                                                 }
-                                                                options={projectData}
+                                                                options={projectOption()}
                                                             />
                                                         </Form.Item>
                                                     </Col>

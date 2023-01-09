@@ -184,28 +184,21 @@ const WorkResultEvaluation = () => {
 
   const handleCreateReviewForm = (props: any) => {
     if (props) {
-      props.validateFields().then(async (values: any, error: any) => {
-        if (values) {
-          console.log("Received values of form: ", values);
-          const newData = {
-            "evaluationFormDetailDTOList": [
-              {
-                "id": "",
-                "criteriaSuper": values.evaluatedCriteria.criteriaSuper,
-                "percent": Number(values.evaluatedCriteria.percent)
-              }
-            ],
-            "evaluationFormDTO": {
-              "id": null,
-              "name": values.evaluatedSample.name,
-              "type": values.evaluatedSample.type
-            }
-          }
-          createPost(newData);
-        }
-        props.resetFields();
-        await setVisible(false);
-      });
+      console.log(props);
+      
+      // props.validateFields().then(async (values: any, error: any) => {
+      //   if (values) {
+      //     console.log("Received values of form: ", values);
+
+      //     const newData = {
+      //       "evaluationFormId": 1,
+      //       "listEmployeeCode": values
+      //     }
+      //     createPost(newData);
+      //   }
+      //   props.resetFields();
+      //   await setVisible(false);
+      // });
     }
   };
 
@@ -213,7 +206,7 @@ const WorkResultEvaluation = () => {
     const filterData = (evaluationData && evaluationData.filter((o) => Object.keys(o).some((k) => String(o[k])
       .toLowerCase()
       .includes(value.toLowerCase())))) as [];
-      setFilterTable(filterData);
+    setFilterTable(filterData);
   };
 
   return <div className={styles.main}>
@@ -241,14 +234,14 @@ const WorkResultEvaluation = () => {
           Thêm mới
         </Button>
       </Card>
-      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={filterTable && filterTable.length > 0 ? filterTable: evaluationData } className={styles.tableMain} />}
+      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={filterTable && filterTable.length > 0 ? filterTable : evaluationData} className={styles.tableMain} />}
       <ResultForm
         visible={visible}
         item={item}
         onCancel={() => setVisible(false)}
         onCreate={handleCreateResultForm} />
       <ReviewForm isVisible={isVisible} item={item}
-        onCancel={() => setIsVisible(false)} onCreate={handleCreateReviewForm}/>
+        onCancel={() => setIsVisible(false)} onCreate={handleCreateReviewForm} />
     </div>
   </div>
 }
