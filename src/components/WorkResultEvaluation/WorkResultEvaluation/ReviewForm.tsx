@@ -189,7 +189,6 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
     }, []);
 
     const onSelectChange = (newSelectedRowKeys: any) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
     dataF.push(selectedRowKeys)

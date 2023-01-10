@@ -62,6 +62,7 @@ export const evaluationApi = createApi({
           method: "GET",
         };
       },
+      providesTags: ['Evaluation']
     }),
     getEvaluationFormById: builder.query<IEvaluationByIdRequest, void>({
       query(id) {
@@ -157,7 +158,12 @@ export const evaluationApi = createApi({
           body: data,
         };
       },
-      invalidatesTags: ['Mark']
+      invalidatesTags: (result) =>
+      result
+        ? [
+            { type: 'Mark', id: 'LIST' },
+          ]
+        : [],
     }),
   }),
 });

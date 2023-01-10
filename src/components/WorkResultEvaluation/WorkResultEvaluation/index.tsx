@@ -3,12 +3,14 @@ import { Space, Table, Tag, Button, DatePicker, Select, Breadcrumb, Modal, Form,
 import type { ColumnsType } from 'antd/es/table';
 import styles from './Style.module.scss';
 import { Card } from 'antd';
-import { SearchOutlined, PlusOutlined, FormOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined, PlusOutlined, FormOutlined, EditOutlined, DeleteOutlined, CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { useCreateMarkCheckointMutation, useCreatePostMutation, useDeletePostMutation, useGetAllEvaluationFormsQuery } from '../../../api/evaluation.api';
 import ResultForm from './ResultForm';
 import ReviewForm from './ReviewForm';
 import { useDispatch } from 'react-redux';
 import { createMarkCheckointAction } from '../../../redux/features/evaluation.slice';
+import { async } from 'q';
+import { notification } from '../../../core/notification';
 
 const Search = Input.Search;
 
@@ -114,13 +116,34 @@ const WorkResultEvaluation = () => {
   const [createPost, { isLoading, isError, error, isSuccess }] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
 
-  const [createMarkCheckoint] = useCreateMarkCheckointMutation();
+  const [createMarkCheckoint, { isLoading: isMarkLoading, isError: isMarkError, error: markError, isSuccess: isMarkSuccess }] = useCreateMarkCheckointMutation();
+
+  useEffect(() => {
+    if (isMarkSuccess) {
+      notification.success({
+        message: 'Thông báo',
+        description: 'Gán mẫu thành công!',
+      });
+      setTimeout(() => notification.close(), 2000);
+      setIsVisible(false);
+    }
+    if (isMarkError) {
+      const error = markError as {data: { responseMessage: ''}}
+      if(markError && error?.data) {
+        notification.error({
+          message: 'Thông báo',
+          description: error?.data?.responseMessage
+        });
+        setTimeout(() => notification.close(), 2000);
+      }
+    }
+  }, [isMarkLoading]);
 
   useEffect(() => {
     if (isSuccess) {
       setVisible(false);
     }
-
+    console.log(markError);
     if (isError) {
       if (Array.isArray((error as any).data.error)) {
         (error as any).data.error.forEach((el: any) => (console.log(el)
@@ -160,7 +183,7 @@ const WorkResultEvaluation = () => {
     });
   }
 
-  const handleCreateResultForm = (props: any) => {
+  const handleCreateResultForm = async (props: any) => {
     if (props) {
       props.validateFields().then(async (values: any, error: any) => {
         if (values) {
@@ -179,7 +202,7 @@ const WorkResultEvaluation = () => {
               "type": values.evaluatedSample.type
             }
           }
-          createPost(newData);
+          createPost(newData)
         }
         props.resetFields();
         await setVisible(false);
@@ -187,20 +210,13 @@ const WorkResultEvaluation = () => {
     }
   };
 
-  const handleCreateReviewForm = async (props: any) => {
+  const handleCreateReviewForm = (props: any) => {
     if (props) {
-      console.log(props);
       const newData = {
         "evaluationFormId": 1,
         "listEmployeeCode": props
       }
-      try{
-        const result = await createMarkCheckoint(newData)
-        .then((payload) => console.log('fulfilled', payload))
-        .catch((error) => console.error('rejected', error));
-      } catch(err){
-        console.log(err)
-      }    
+      createMarkCheckoint(newData);
     }
   };
 
@@ -236,7 +252,7 @@ const WorkResultEvaluation = () => {
           Thêm mới
         </Button>
       </Card>
-      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={filterTable && filterTable.length > 0 ? filterTable : evaluationData} className={styles.tableMain} />}
+      {evaluationData && evaluationData.length > 0 && <Table columns={columns} dataSource={filterTable && filterTable.length > 0 ? filterTable : evaluationData} className={styles.tableMain} rowKey={(Math.random()).toString()} />}
       <ResultForm
         visible={visible}
         item={item}
