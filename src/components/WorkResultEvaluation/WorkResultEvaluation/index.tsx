@@ -189,7 +189,6 @@ const WorkResultEvaluation = () => {
 
   const handleCreateReviewForm = async (props: any) => {
     if (props) {
-      console.log(props);
       const newData = {
         "evaluationFormId": 1,
         "listEmployeeCode": props
