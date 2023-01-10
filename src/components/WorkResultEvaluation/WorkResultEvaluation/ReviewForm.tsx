@@ -19,6 +19,7 @@ interface DataType {
     employeeCode: any;
 }
 
+
 const EvaluationStatus = [
     {
         value: 'THANG',
@@ -68,8 +69,9 @@ const Criteria = [
     }
 ]
 
-const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
+const dataF: React.Key[][] = [];
 
+const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
     const columns: ColumnsType<DataType> = [
         {
             title: 'Mã nhân viên',
@@ -149,7 +151,7 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
         if (evaluateForm && evaluateForm?.responseData) setEvaluateFormData(evaluateForm?.responseData);
         if (evaluateType && evaluateType?.responseData) setEvaluateTypeData(evaluateType?.responseData);
         if (employee && employee?.responseData) setEmployeeData(employee?.responseData);
-    }, []);
+    }, [item]);
 
     useEffect(() => {
         if (item && Object.entries(item).length > 0) {
@@ -186,12 +188,13 @@ const ReviewForm = ({ isVisible, onCancel, onCreate, item }: any) => {
         return onCancel()
     }, []);
 
-    // const employeeAssigned: []
     const onSelectChange = (newSelectedRowKeys: any) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
-    let onCreated = useCallback(() => onCreate(selectedRowKeys), []);
+    dataF.push(selectedRowKeys)
+    
+    let onCreated = useCallback(() => onCreate(dataF.pop()), []);
 
     const rowSelection = {
         selectedRowKeys,

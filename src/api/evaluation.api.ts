@@ -23,7 +23,7 @@ export const evaluationApi = createApi({
     return headers
   },
 }),
-  tagTypes: ["Evaluation", "Criteria", 'Assignation'],
+  tagTypes: ["Evaluation", "Criteria", 'Assignation', 'Mark'],
   endpoints: (builder) => ({
     createPost: builder.mutation<IEvaluationRequest, {}>({
       query(project) {
@@ -149,6 +149,16 @@ export const evaluationApi = createApi({
         };
       },
     }),
+    createMarkCheckoint: builder.mutation<IEvaluationRequest, {}>({
+      query(data) {
+        return {
+          url: "/api/user/api/markCheckpoint/create",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ['Mark']
+    }),
   }),
 });
 
@@ -165,5 +175,6 @@ export const {
   useGetListDeptActiveQuery,
   useGetProjectQuery,
   useGetEvaluateTypeQuery,
-  useGetListEmployeeCodeByEvaluationFormQuery
+  useGetListEmployeeCodeByEvaluationFormQuery,
+  useCreateMarkCheckointMutation
 } = evaluationApi;

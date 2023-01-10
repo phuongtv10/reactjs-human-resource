@@ -4,9 +4,12 @@ import type { ColumnsType } from 'antd/es/table';
 import styles from './Style.module.scss';
 import { Card } from 'antd';
 import { SearchOutlined, PlusOutlined, FormOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useCreatePostMutation, useDeletePostMutation, useGetAllEvaluationFormsQuery } from '../../../api/evaluation.api';
+import { useCreateMarkCheckointMutation, useCreatePostMutation, useDeletePostMutation, useGetAllEvaluationFormsQuery } from '../../../api/evaluation.api';
 import ResultForm from './ResultForm';
 import ReviewForm from './ReviewForm';
+import { useDispatch } from 'react-redux';
+import { createMarkCheckointAction } from '../../../redux/features/evaluation.slice';
+
 const Search = Input.Search;
 
 const layout = {
@@ -111,6 +114,8 @@ const WorkResultEvaluation = () => {
   const [createPost, { isLoading, isError, error, isSuccess }] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
 
+  const [createMarkCheckoint] = useCreateMarkCheckointMutation();
+
   useEffect(() => {
     if (isSuccess) {
       setVisible(false);
@@ -182,23 +187,20 @@ const WorkResultEvaluation = () => {
     }
   };
 
-  const handleCreateReviewForm = (props: any) => {
+  const handleCreateReviewForm = async (props: any) => {
     if (props) {
       console.log(props);
-      
-      // props.validateFields().then(async (values: any, error: any) => {
-      //   if (values) {
-      //     console.log("Received values of form: ", values);
-
-      //     const newData = {
-      //       "evaluationFormId": 1,
-      //       "listEmployeeCode": values
-      //     }
-      //     createPost(newData);
-      //   }
-      //   props.resetFields();
-      //   await setVisible(false);
-      // });
+      const newData = {
+        "evaluationFormId": 1,
+        "listEmployeeCode": props
+      }
+      try{
+        const result = await createMarkCheckoint(newData)
+        .then((payload) => console.log('fulfilled', payload))
+        .catch((error) => console.error('rejected', error));
+      } catch(err){
+        console.log(err)
+      }    
     }
   };
 

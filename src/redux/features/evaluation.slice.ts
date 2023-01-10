@@ -20,9 +20,16 @@ export const evaluationSlice = createSlice({
         data,
       }
     },
+    createMarkCheckoint: (state,action): IEvaluationState => {
+      const {data} = action.payload;
+      return {
+        ...state,
+        data,
+      }
+    },
   },
 });
 
-export const {getEvaluationFormById: getEvaluationFormByIdAction} = evaluationSlice.actions
+export const {createMarkCheckoint: createMarkCheckointAction, getEvaluationFormById: getEvaluationFormByIdAction} = evaluationSlice.actions
 
 export default evaluationSlice.reducer;

@@ -1,7 +1,6 @@
 .header {
   display: flex;
   flex-direction: row;
-  // justify-content: space-between;
   gap: 25px;
   height: 64px;
   align-items: center;
@@ -29,18 +28,17 @@
   .ant-dropdown {
     width: 120px !important;
   }
+  input {
+    height: 1rem;
+  }
 }
-
+a {
+  padding-left: 1rem;
+}
 div {
   div {
     .ant-dropdown {
       width: 120px !important;
     }
   }
-}
-a {
-  padding-left: 1rem;
-}
-input {
-  height: 1rem;
 }
