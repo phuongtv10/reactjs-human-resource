@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+.addCriteria {
+  color: black;
+  background-color: white;
+  border: 1px dashed black;
+}
+.btnAddCriteria {
+  margin-top: 1.25rem;
+  width: 10rem !important;
+}
+.tableCriteria {
+  width: 100%;
+}
+input {
+  height: 2rem;
+}
+thead[class*="ant-table-thead"] th {
+  text-align: center !important;
+}
+tbody > tr > td {
+  text-align: center !important;
+}

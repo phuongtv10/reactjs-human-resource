@@ -4,13 +4,14 @@ import type { ColumnsType } from 'antd/es/table';
 import styles from './Style.module.scss';
 import { Card } from 'antd';
 import { SearchOutlined, PlusOutlined, FormOutlined, EditOutlined, DeleteOutlined, CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
-import { useCreateMarkCheckointMutation, useCreatePostMutation, useDeletePostMutation, useGetAllEvaluationFormsQuery } from '../../../api/evaluation.api';
+import { useCreateMarkCheckointMutation, useCreatePostMutation, useDeletePostMutation, useGetAllEvaluationFormsQuery, useGetEvaluateFormQuery, useGetEvaluateTypeQuery } from '../../../api/evaluation.api';
 import ResultForm from './ResultForm';
 import ReviewForm from './ReviewForm';
 import { useDispatch } from 'react-redux';
 import { createMarkCheckointAction } from '../../../redux/features/evaluation.slice';
 import { async } from 'q';
 import { notification } from '../../../core/notification';
+import { useNavigate } from 'react-router-dom';
 
 const Search = Input.Search;
 
@@ -99,7 +100,17 @@ const WorkResultEvaluation = () => {
       ),
     },
   ];
-  const { data } = useGetAllEvaluationFormsQuery();
+  const { data, error: evaluationError } = useGetAllEvaluationFormsQuery();
+  const navigate = useNavigate()
+  if (evaluationError && Object.values(evaluationError).includes(401)) {
+    setTimeout(() => {
+      navigate('/auth')
+    }, 3000)
+  }
+  
+  const { data: evaluateForm } = useGetEvaluateFormQuery('');
+  const { data: evaluateType } = useGetEvaluateTypeQuery('');
+  
   const evaluationData = data?.responseData;
   const [item, setItem] = useState('');
   const [visible, setVisible] = useState(false);
@@ -128,39 +139,59 @@ const WorkResultEvaluation = () => {
       setIsVisible(false);
     }
     if (isMarkError) {
-      const error = markError as {data: { responseMessage: ''}}
-      if(markError && error?.data) {
+      const error = markError as { data: { responseMessage: '' } }
+      if (markError && error?.data) {
         notification.error({
           message: 'Thông báo',
           description: error?.data?.responseMessage
         });
         setTimeout(() => notification.close(), 2000);
+      } else if (markError && Object.values(markError).includes(401)) {
+        setTimeout(() => {
+          navigate('/auth')
+        }, 3000)
       }
     }
   }, [isMarkLoading]);
 
   useEffect(() => {
     if (isSuccess) {
+      notification.success({
+        message: 'Thông báo',
+        description: 'Gán mẫu thành công!',
+      });
+      setTimeout(() => notification.close(), 2000);
       setVisible(false);
     }
-    console.log(markError);
     if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) => (console.log(el)
-        ))
-      } else {
+      const errors = error as { data: { responseMessage: '' } }
+      if (errors && errors?.data) {
+        notification.error({
+          message: 'Thông báo',
+          description: errors?.data?.responseMessage
+        });
+        setTimeout(() => notification.close(), 2000);
+      } else if (error && Object.values(error).includes(401)) {
+        setTimeout(() => {
+          navigate('/auth')
+        }, 3000)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
   const onUpdate = (record: any) => {
-    setItem(record);
+
+    setItem({...record,
+      evaluateForm, evaluateType
+    });
     setVisible(true);
   }
 
   const onAdd = (record: any) => {
-    setItem(record);
+    setItem({...record,
+      evaluateForm, evaluateType
+    });
     setIsVisible(true);
   }
 
@@ -221,7 +252,7 @@ const WorkResultEvaluation = () => {
   };
 
   const onSearch = (value: string) => {
-    const filterData = (evaluationData && evaluationData.filter((o) => Object.keys(o).some((k) => String(o[k])
+    const filterData = (evaluationData && evaluationData.filter((o: any) => Object.keys(o).some((k) => String(o[k])
       .toLowerCase()
       .includes(value.toLowerCase())))) as [];
     setFilterTable(filterData);

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Space, Table, Tag, Button, DatePicker, Select, Breadcrumb, Modal, Form, Input, InputNumber, Col, Row } from 'antd';
+import { Space, Table, Tag, Button, DatePicker, Select, Breadcrumb, Modal, Form, Input, InputNumber, Col, Row, SelectProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import styles from './ResultForm.module.scss';
 import { Card } from 'antd';
@@ -8,6 +8,8 @@ import { evaluationApi, useCreatePostMutation, useGetCriterionByTypeQuery, useGe
 import { WORKRESULTEVALUATION } from "../../../core/constants";
 import { useDispatch } from 'react-redux';
 import { getEvaluationFormByIdAction } from '../../../redux/features/evaluation.slice';
+import DynamicFormList from '../../Common/DynamicFormList';
+import { useNavigate } from 'react-router-dom';
 
 const layout = {
     labelCol: { span: 8 },
@@ -15,50 +17,40 @@ const layout = {
 };
 interface DataType {
 }
-const EvaluationTypeTemplate = [
-    {
-        value: 'THANG',
-        label: 'Tháng',
-    },
-    {
-        value: 'QUY',
-        label: 'Quý',
-    },
-    {
-        value: 'KY',
-        label: 'Kỳ',
-    },
-    {
-        value: 'HHHD',
-        label: 'Hết hạn hợp đồng',
-    }
-]
-
-const Criteria = [
-    {
-        value: 'KQCV',
-        label: 'Kết quả công việc',
-    },
-    {
-        value: 'DGTN',
-        label: 'Đánh giá trách nhiệm',
-    },
-    {
-        value: 'DGNL',
-        label: 'Đánh giá năng lực',
-    },
-    {
-        value: 'DGPT',
-        label: 'Đánh giá phát triển',
-    }
-]
 
 let defaultValues = {
     "evaluatedSample": {},
     "evaluatedCriteria": []
 }
 
+let parentCriteria: any[] = []
 const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
+    const EvaluationTypeTemplate = () => {
+        const data = item?.evaluateForm?.responseData;
+        if (data && Array.isArray(data)) {
+            let optionsData: SelectProps['options'] = [];
+            optionsData = data.map((item: any) => ({
+                'label': item['paramName'],
+                'value': item['paramCode'],
+            }))
+            return optionsData
+        }
+    }
+
+    const Criteria = () => {
+        const data = item?.evaluateType?.responseData
+        if (data && Array.isArray(data)) {
+            let optionsData: SelectProps['options'] = [];
+            optionsData = data.map((item: any) => {
+                    parentCriteria.push(item['paramCode'])
+                return ({
+                'label': item['paramName'],
+                'value': item['paramCode'],
+            })
+        })
+            return optionsData
+        }
+    }
 
     const columns: ColumnsType<DataType> = [
         {
@@ -84,20 +76,42 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
     const TITLE_ADD = `${WORKRESULTEVALUATION.TITLE_ADD} ${WORKRESULTEVALUATION.TITLE_TEMPLATE}`;
     const [form] = Form.useForm();
     const [isCriterionData, setIsCriterionData] = useState(false);
+    const [criterionData, setCriterionData] = useState([]);
     const [evaluationType, setEvaluationType] = useState('');
-    const { data: dataByType } = useGetCriterionByTypeQuery(evaluationType, {});
+    const { data: dataByType, isLoading, isError, error, isSuccess } = useGetCriterionByTypeQuery(evaluationType, {});
     const { data: dataById } = useGetEvaluationFormByIdQuery(item?.id);
+
     let changing = item?.id;
     if (item) {
         defaultValues.evaluatedSample = item;
         form.setFieldsValue(defaultValues)
     }
+
+    parentCriteria = parentCriteria.filter((element, index) => {
+        return parentCriteria.indexOf(element) === index;
+    });
+    const childCriteria = parentCriteria && dataByType && dataByType?.responseData && dataByType?.responseData.length> 0 && dataByType?.responseData?.map((item) => parentCriteria.map((ite: any) => {
+           if (ite == item['type']) return item
+        }).filter(el => el !== undefined)).map(i => Object.assign({}, i)[0]) as []
+    // console.log(childCriteria);
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (isError) {
+          if (error && Object.values(error).includes(401)) {
+            setTimeout(() => {
+              navigate('/auth')
+            }, 3000)
+          }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isLoading]);
+    
     useEffect(() => {
         if (item && Object.entries(item).length > 0) {
             if (dataById && Object.entries(dataById?.responseData).length > 0) {
                 if (Object.values(dataById?.responseData)[1]) {
                     const evaluationFormDetailDTOList = Object.values(dataById?.responseData)[1] as [];
-                    if (Array.isArray(evaluationFormDetailDTOList) && evaluationFormDetailDTOList.length == 0) {
+                    if (Array.isArray(evaluationFormDetailDTOList) && evaluationFormDetailDTOList.length == 0 && isCriterionData) {
                         changing = null;
                         setEvaluationType('');
                         setIsCriterionData(false);
@@ -118,10 +132,13 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
                 }
             }
         }
-    }, [changing]);
+        console.log(criterionData);
+    }, [item]);
 
     const handleChange = (value: string) => {
-        setIsCriterionData(true);
+        console.log(127, value);
+        // evaluationDataByType.push(value);
+        // setIsCriterionData(true);
         setEvaluationType(value);
     };
 
@@ -140,6 +157,13 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
             range: '${label} must be between ${min} and ${max}',
         },
     };
+    const dataObj = {
+        criteria: Criteria(),
+        item: parentCriteria,
+        dataByType: dataByType,
+        columns: columns
+    }
+    // console.log(dataObj);
 
     return (
         <div className={styles.btnAction}>
@@ -165,9 +189,9 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
                                             placeholder="--- Chọn ---"
                                             optionFilterProp="children"
                                             filterOption={(input, option) =>
-                                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                (option?.label ?? '').toString().toLowerCase().includes(input.toLowerCase())
                                             }
-                                            options={EvaluationTypeTemplate}
+                                            options={EvaluationTypeTemplate()}
                                         />
                                     </Form.Item>
                                 </Col>
@@ -178,7 +202,8 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
                                 </Col>
                             </Row>
                             <Row>
-                                <Form.List name="evaluatedCriteria">
+                                <DynamicFormList dataObj={dataObj} handleChange={handleChange}/>
+                                {/* <Form.List name="evaluatedCriteria">
                                     {(fields, { add, remove }) => (
                                         <>
                                             {fields.map(({ key, name, ...restField }) => (
@@ -192,10 +217,10 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
                                                                     placeholder="--- Chọn ---"
                                                                     optionFilterProp="children"
                                                                     filterOption={(input, option) =>
-                                                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                                        (option?.label ?? '').toString().toLowerCase().includes(input.toLowerCase())
                                                                     }
                                                                     onChange={handleChange}
-                                                                    options={Criteria}
+                                                                    options={Criteria()}
                                                                 />
                                                             </Form.Item>
                                                         </Col>
@@ -211,7 +236,7 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
                                                         </Col>
                                                     </Space>
                                                     <Row className={styles.tableCriteria}>
-                                                        {isCriterionData && dataByType?.responseData && dataByType?.responseData.length > 0 && <Table columns={columns} dataSource={dataByType?.responseData} className={styles.tableCriteria} pagination={false} />}
+                                                        {childCriteria && Array.isArray(childCriteria) && <Table columns={columns} dataSource={childCriteria} className={styles.tableCriteria} pagination={false} />}
                                                     </Row>
                                                 </>
                                             ))}
@@ -222,7 +247,7 @@ const ResultForm = ({ visible, onCancel, onCreate, item }: any) => {
                                             </Row>
                                         </>
                                     )}
-                                </Form.List>
+                                </Form.List> */}
                             </Row>
                         </Form>
                     </div>

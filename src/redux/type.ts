@@ -3,7 +3,7 @@ export interface IEvaluationRequest {
 }
 
 export interface IEvaluationByIdRequest {
-  responseData: {}
+  responseData: { evaluationFormDetailDTOList: any}
 }
 
 export interface IEvaluationResponse {}

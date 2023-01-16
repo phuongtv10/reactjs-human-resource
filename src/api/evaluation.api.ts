@@ -6,6 +6,7 @@ import { RootState } from "../redux/store";
 
 const cookies = new Cookies();
 let idFromevaluationForm: any
+let evaluationFormDetailDTOList: any[] = []
 
 export const evaluationApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -72,13 +73,30 @@ export const evaluationApi = createApi({
           method: "GET",
         };
       },
+      providesTags: (result) => {
+        evaluationFormDetailDTOList = result && result?.responseData ? result?.responseData?.evaluationFormDetailDTOList?.map(({ criteriaSuper }: any) => ({ type: 'Criteria', criteriaSuper })) : ['Criteria']
+        return ['Criteria']
+      }
     }),
     getCriterionByType: builder.query<IEvaluationRequest, any>({
-      query(type) {
-        return {
-          url: `api/user/api/criterion/get-criterion-by-type?type=${type}`,
-          method: "GET",
-        };
+      // query(type) {
+      //   return {
+      //     url: `api/user/api/criterion/get-criterion-by-type?type=${type}`,
+      //     method: "GET",
+      //   };
+      // },
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+        let result: any
+        if(_arg){
+          result = await fetchWithBQ(`api/user/api/criterion/get-criterion-by-type?type=${_arg}`)
+        } else if(evaluationFormDetailDTOList && evaluationFormDetailDTOList.length > 0) {
+          result = await evaluationFormDetailDTOList && evaluationFormDetailDTOList.length > 0 && evaluationFormDetailDTOList.map((item: any) => {
+            return fetchWithBQ(`api/user/api/criterion/get-criterion-by-type?type=${item?.criteriaSuper}`)
+          }) as any;
+        }
+        return result?.data
+          ? { data: result?.data as IEvaluationFormDTO }
+          : { error: result?.error as FetchBaseQueryError }
       },
     }),
     getAssignedData: builder.query<IEvaluationRequest, any>({
